@@ -12,13 +12,14 @@ Consiste en una simulación de un juego RPG por consola. Donde vas a poder crear
 ```bash
   npm install
 ```
-3. Ejecutar el protecto:
+3. Ejecutar el proyecto:
 ```bash
   node index.js
 ```
 
 ---
 ## Diagrama de Clases
+![Diagrama](./assets/diagrama.png)
 ---
 ## Ejemplos de uso
 ### Ejemplo 1 - Creación de Mago y un monstruo, despúes atacar.

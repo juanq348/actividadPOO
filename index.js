@@ -8,7 +8,7 @@ class Personaje{
         if (new.target === Personaje) throw new Error("El personaje es abstracto");
             this.nombre = nombre;
             this.#vida = vida;
-            this.#mana = mana;4
+            this.#mana = mana;
             this.#danioBase = danioBase;
             this.#defensa = defensa;
             this.inventario = new Inventario();
@@ -42,7 +42,7 @@ class Personaje{
         this.#defensa = Math.max(0, def);
     }
 
-    atacar(objetivo) { 
+    atacar() { 
         throw new Error("Este método debe estar en la subclase")
     };
 
@@ -61,7 +61,7 @@ class Guerrero extends Personaje{
     atacar(objetivo){
         const danio = this.danioBase + 2;
         const danioAplicado = objetivo.defender(danio);
-        console.log(`${this.nombre} golpea a ${objetivo.nombre} por ${danioAplicado} de daño`);
+        return `${this.nombre} golpea a ${objetivo.nombre} por ${danioAplicado} de daño`;
     }
 }
 
@@ -70,10 +70,10 @@ class Mago extends Personaje{
         if(this.mana >= 5 ){
             this.mana -= 5;
             const danioAplicado = objetivo.defender(this.danioBase + 3)
-            console.log(`${this.nombre} ataca a ${objetivo.nombre} por ${danioAplicado} de daño`);
+            return `${this.nombre} ataca a ${objetivo.nombre} por ${danioAplicado} de daño`;
         } else {
             const danioAplicado = objetivo.defender(this.danioBase);
-            console.log(`${this.nombre} ataca a ${objetivo.nombre} por ${danioAplicado} de daño`);
+            return `${this.nombre} ataca a ${objetivo.nombre} por ${danioAplicado} de daño`;
         }
     }
 }
@@ -108,14 +108,10 @@ class Monstruo{
         return danioReal;
     }
 
-    estaVivo(){
-        return this.#vida > 0
-    }
-
     atacar(objetivo){
         const danioBase = 5 + Math.floor(Math.random()*6);
         const danioAplicado = objetivo.defender(danioBase);
-        console.log(`${this.nombre} ataca a ${objetivo.nombre} por ${danioAplicado} de daño.`);
+        return `${this.nombre} ataca a ${objetivo.nombre} por ${danioAplicado} de daño.`;
     }
 
     estaVivo(){
@@ -128,7 +124,7 @@ class Item{
         if(new.target === Item) throw new Error("Item es abstracto");
         this.nombre = nombre
     }
-    usar(personaje){
+    usar(){
         throw new Error("Esta en subclase");
     }
 }
@@ -140,7 +136,7 @@ class Arma extends Item{
     }
     usar(personaje){
         personaje.danioBase += this.bonificacion;
-        console.log(`${personaje.nombre} equipa ${this.nombre} (+${this.bonificacion} daño)`);
+        return `${personaje.nombre} equipa ${this.nombre} (+${this.bonificacion} daño)`;
     }
 }
 
@@ -153,7 +149,7 @@ class Pocion extends Item{
     usar(personaje){
         personaje.vida += this.cura;
         personaje.mana += this.manaExtra;
-        console.log(`${personaje.nombre} usa ${this.nombre}, recupera ${this.cura} vida y ${this.manaExtra} de mana`);
+        return `${personaje.nombre} usa ${this.nombre}, recupera ${this.cura} vida y ${this.manaExtra} de mana`;
     }
 }
 
@@ -172,11 +168,10 @@ class Inventario {
 
     usarItem(nombre, personaje) {
         const item = this.items.find(i => i.nombre === nombre);
-        if(!item) console.log("Item no encontrado");
-        else{
-            item.usar(personaje);
-            this.eliminarItem(nombre);
-        }
+        if(!item) return "Item no encontrado";
+        const mensaje = item.usar(personaje);
+        this.eliminarItem(nombre);
+        return mensaje
     }
 
     listaItems(){
@@ -200,18 +195,20 @@ class Juego {
     }
 
     pelea(jugador, monstruo){
+        const logs = [];
         while(jugador.estaVivo() && monstruo.estaVivo()){
-            jugador.atacar(monstruo);
+            logs.push(jugador.atacar(monstruo));
             if(!monstruo.estaVivo()){
-                console.log(`${monstruo.nombre} ha sido derrotado!`);
-                return
+                logs.push(`${monstruo.nombre} ha sido derrotado!`);
+                break;
             }
-            monstruo.atacar(jugador);
+            logs.push(monstruo.atacar(jugador));
             if(!jugador.estaVivo()){
-                console.log(`${jugador.nombre} ha caído. Juego Finalizado`);
-                return
+                logs.push(`${jugador.nombre} ha caído. Juego Finalizado`);
+                break;
             }
         }
+        return logs;
     }
 }
 
@@ -233,12 +230,12 @@ function cli(juego){
 
     while(opcion !== "0"){
         mostrarMenu();
-        opcion = prompt("Opción:");
+        opcion = prompt("Opción: ");
 
         switch(opcion){
             case "1":{
                 const tipoPersonaje = prompt("Tipo de personaje (Guerrero / Mago): ").toLowerCase();
-                const nombre = prompt("Nombre de tu personaje:");
+                const nombre = prompt("Nombre de tu personaje: ");
                 let personaje;
                 if(tipoPersonaje === "guerrero"){
                     personaje = new Guerrero(nombre);
@@ -248,44 +245,46 @@ function cli(juego){
                     console.log("Tipo inválido");
                     break;
                 }
-                personaje.inventario.agregarItem(new Pocion("Pocion de mana",0 , 20));
+                personaje.inventario.agregarItem(new Pocion("Pocion de mana",5 , 20));
                 juego.agregarPersonaje(personaje);
                 console.log(`${tipoPersonaje.charAt(0).toUpperCase() + tipoPersonaje.slice(1)} ${nombre} ha sido creado.`);
                 break
             }
             case "2":{
-                const nombre = prompt("Nombre del monstruo:");
+                const nombre = prompt("Nombre del monstruo: ");
                 const monstruo = new Monstruo(nombre);
                 juego.agregarMonstruo(monstruo);
                 console.log(`Monstruo ${nombre} ha sido creado`);
                 break
             }
             case "3":{
-                if (juego.personajes.length === 0 || juego.monstruos.length === 0){
+                if (!juego.personajes.length || !juego.monstruos.length){
                     console.log("Debes crear un personaje y un monstruo primero.");
+                    break;
                 } else {
-                    juego.pelea(juego.personajes[0], juego.monstruos[0]);
-                };
-                break;
+                    const logs = juego.pelea(juego.personajes[0], juego.monstruos[0]);
+                    logs.forEach(l => console.log(l))
+                    break;
+                }
             }
             case "4":{
-                if(juego.personajes.length === 0){
+                if(!juego.personajes.length){
                     console.log("No hay personaje para usar ítem");
                     break;
                 }
                 const p = juego.personajes[0];
                 console.log("Inventario: " + p.inventario.listaItems());
                 const nombreItem = prompt("Nombre del ítem a usar: ");
-                p.inventario.usarItem(nombreItem, p);
+                console.log(p.inventario.usarItem(nombreItem, p));
                 break;
             }
             case "5":{
-                if(juego.personajes.length === 0){
+                if(!juego.personajes.length){
                     console.log("No hay personaje creado");
                     break;
                 }
-                    const tipoItem = prompt("Tipo de ítem (arma / pocion):").toLowerCase();
-                    const nombre = prompt("Nombre del ítem:");
+                    const tipoItem = prompt("Tipo de ítem (arma / pocion): ").toLowerCase();
+                    const nombre = prompt("Nombre del ítem: ");
                     const p = juego.personajes[0];
                     if(tipoItem === "arma"){
                         p.inventario.agregarItem(new Arma(nombre));
@@ -294,7 +293,7 @@ function cli(juego){
                     break;
                 }
                 case "0":
-                    console.log("Saliendo");
+                    console.log("Saliendo...");
                     break;
                 default:
                     console.log(("Opción inválida"));
@@ -309,11 +308,12 @@ function pruebas(){
     const monstruo = new Monstruo("Payo");
     const pocion = new Pocion("Poción grande", 50);
     const arma = new Arma("Espada", 5);
-
-    guerrero.inventario.agregarItem(pocion);
-    guerrero.inventario.agregarItem(arma);
     juego.agregarPersonaje(guerrero);
     juego.agregarMonstruo(monstruo);
+
+    console.log("Inventario inicial:", guerrero.inventario.listaItems());
+    guerrero.inventario.agregarItem(pocion);
+    guerrero.inventario.agregarItem(arma);
 
     console.log("Estado inicial:");
     console.log(guerrero);
@@ -326,7 +326,7 @@ function pruebas(){
     guerrero.inventario.usarItem("Espada", guerrero);
 
     console.log("\nPelea:");
-    juego.pelea(guerrero, monstruo)
+    juego.pelea(guerrero, monstruo).forEach(l => console.log(l));
 
     console.log("\nFIN DE PRUEBAS");
 }
