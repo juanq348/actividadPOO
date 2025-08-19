@@ -14,7 +14,7 @@ Consiste en una simulación de un juego RPG por consola. Donde vas a poder crear
 ```
 3. Ejecutar el proyecto:
 ```bash
-  node index.js
+  node main.js
 ```
 
 ---
@@ -22,7 +22,7 @@ Consiste en una simulación de un juego RPG por consola. Donde vas a poder crear
 ![Diagrama](./assets/diagrama.png)
 ---
 ## Ejemplos de uso
-### Ejemplo 1 - Creación de Mago y un monstruo, despúes atacar.
+### Ejemplo 1 - Creación de Mago y un monstruo, después atacar.
 
 ```bash
 Menú
@@ -33,7 +33,7 @@ Menú
 5. Agregar ítem
 0. Salir
 Opción:1
-Tipo de personaje (Guerrero / Mago): Mago
+Tipo de personaje: 1) Guerrero  2) Mago (0 para cancelar): 2
 Nombre de tu personaje:Odin
 Mago Odin ha sido creado.
 
@@ -45,8 +45,8 @@ Menú
 4. Usar ítem
 5. Agregar ítem
 0. Salir
-Opción:1
-Nombre de monstruo:Orco
+Opción:2
+Nombre del monstruo: Orco
 Monstruo Orco ha sido creado.
 
 
@@ -93,6 +93,7 @@ Odin usa Pocion de mana, recupera 0 vida y 20 de mana
 5. Agregar ítem
 0. Salir
 Opción:5
-Tipo de ítem (arma / pocion):arma
+Tipo de ítem: 1) Arma  2) Poción (0 para cancelar): 1
 Nombre del ítem:Excalibur
 ```
+
