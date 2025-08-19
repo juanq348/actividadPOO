@@ -1,9 +1,7 @@
-interfaz.js
-
 import promptSync from "prompt-sync";
-import { Guerrero, Mago } from './personaje.js';
-import { Monstruo } from './monstruo.js';
-import { Arma, Pocion } from './item.js';
+import { Guerrero, Mago } from './clases/personaje.js';
+import { Monstruo } from './clases/monstruo.js';
+import { Arma, Pocion } from './clases/item.js';
 
 const prompt = promptSync();
 
