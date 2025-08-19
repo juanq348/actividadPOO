@@ -62,10 +62,10 @@ export function interfaz(juego) {
                     console.log("No hay personaje para usar ítem");
                     break;
                 }
-                const p = juego.personajes[0];
-                console.log("Inventario: " + p.inventario.listaItems());
+                const personaje = juego.personajes[0];
+                console.log("Inventario: " + personaje.inventario.listaItems());
                 const nombreItem = prompt("Nombre del ítem a usar: ");
-                console.log(p.inventario.usarItem(nombreItem, p));
+                console.log(p.inventario.usarItem(nombreItem, personaje));
                 break;
             }
             case "5": {
@@ -75,10 +75,10 @@ export function interfaz(juego) {
                 }
                 const tipoItem = prompt("Tipo de ítem (arma / pocion): ").toLowerCase();
                 const nombre = prompt("Nombre del ítem: ");
-                const p = juego.personajes[0];
+                const personaje = juego.personajes[0];
                 if (tipoItem === "arma") {
-                    p.inventario.agregarItem(new Arma(nombre));
-                } else if (tipoItem === "pocion") p.inventario.agregarItem(new Pocion(nombre));
+                    personaje.inventario.agregarItem(new Arma(nombre));
+                } else if (tipoItem === "pocion") personaje.inventario.agregarItem(new Pocion(nombre));
                 else console.log("Tipo inválido");
                 break;
             }

@@ -19,22 +19,22 @@ export class Personaje {
     get vida() {
         return this.#vida
     }
-    set vida(v) {
-        this.#vida = Math.max(0, v);
+    set vida(vida) {
+        this.#vida = Math.max(0, vida);
     }
 
     get mana() {
         return this.#mana
     }
-    set mana(m) {
-        this.#mana = Math.max(0, m);
+    set mana(mana) {
+        this.#mana = Math.max(0, mana);
     }
 
     get danioBase() {
         return this.#danioBase
     }
-    set danioBase(d) {
-        this.#danioBase = Math.max(0, d);
+    set danioBase(danio) {
+        this.#danioBase = Math.max(0, danio);
     }
 
     get defensa() {

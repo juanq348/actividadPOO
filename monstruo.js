@@ -11,8 +11,8 @@ export class Monstruo {
     get vida() {
         return this.#vida
     }
-    set vida(v) {
-        this.#vida = Math.max(0, v);
+    set vida(vida) {
+        this.#vida = Math.max(0, vida);
     }
 
     get defensa() {
