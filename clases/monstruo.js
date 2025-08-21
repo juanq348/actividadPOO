@@ -29,7 +29,7 @@ export class Monstruo {
     }
 
     atacar(objetivo) {
-        const danioBase = 5 + Math.floor(Math.random() * 6);
+        const danioBase = 7 + Math.floor(Math.random() * 6);
         const danioAplicado = objetivo.defender(danioBase);
         return `${this.nombre} ataca a ${objetivo.nombre} por ${danioAplicado} de daño.`;
     }

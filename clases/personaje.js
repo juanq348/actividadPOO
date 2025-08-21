@@ -61,7 +61,7 @@ export class Personaje {
 
 export class Guerrero extends Personaje {
     atacar(objetivo) {
-        const danio = this.danioBase + 2;
+        const danio = this.danioBase + 4;
         const danioAplicado = objetivo.defender(danio);
         return `${this.nombre} golpea a ${objetivo.nombre} por ${danioAplicado} de daño`;
     }
